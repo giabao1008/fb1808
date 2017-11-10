@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { User } from '../../src/models/User';
 
-describe('Test user model', () => {
+xdescribe('Test user model', () => {
     it('Can add new user', async() => {
         const user = new User({
             email: 'pho@gmail.com',
