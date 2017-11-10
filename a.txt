@@ -1,0 +1,11 @@
+/*
+    Dang ky
+    Dang nhap
+    Dang bai viet
+    Ket ban
+    Like
+    Comment
+    NewFeed
+    Message
+    Notification
+*/
