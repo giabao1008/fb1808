@@ -21,7 +21,7 @@ export class User extends UserModel {
     name: string;
     verifyCode: string;
     isVerified: boolean;
-    
+
     static async signUp(email: string, password: string, name: string): Promise<SignUpResponse> {
         const encrypted = await hash(password, 8);
         const user = new User({ email, password: encrypted, name, verifyCode: randomString() });
@@ -42,10 +42,11 @@ export class User extends UserModel {
         const token = await createToken({ name, email });
         return { token, user: { email, name } };
     }
+
+    static async verifyUser(idUser, verifyCode) {
+        const user = await User.findById(idUser) as User;
+        if (!user) throw new Error('User khong ton tai');
+        if (verifyCode !== user.verifyCode) throw new Error('CODE sai');
+        return User.findByIdAndUpdate(idUser, { isVerified: true });
+    }
 }
-
-/*
-    
-Gui email: <a href="/user/verify/${jwt}">HERE</a>
-
-*/

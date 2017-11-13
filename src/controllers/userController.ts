@@ -32,3 +32,10 @@ userRoute.post('/signin', jsonParser, (req, res) => {
     .then(response => res.send(response))
     .catch(error => res.status(400).send({ message: error.message }))
 });
+
+userRoute.get('/verify/:idUser/:verifyCode', (req, res) => {
+    const { idUser, verifyCode } = req.params;
+    User.verifyUser(idUser, verifyCode)
+    .then(() => res.send({ message: 'verified' }))
+    .catch(err => res.status(404).send({ message: err.message }))
+});

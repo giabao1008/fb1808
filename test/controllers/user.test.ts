@@ -10,6 +10,7 @@ describe('Test user sign up controller', () => {
         await request(app).post('/user/signup').send(body);
         const user = await User.findOne({}) as User;
         assert.equal('pho', user.name);
+        assert.equal(false, user.isVerified);
     });
 });
 
@@ -37,3 +38,27 @@ describe('Test user sign in controller', () => {
     });
 });
 
+describe('Test user verify controller', () => {
+    let idUser, verifyCode;
+
+    beforeEach('Signup for test', async () => {
+        await User.signUp('pho1@gmail.com', '123', 'Pho Nguyen');
+        const user = await User.findOne() as User;
+        idUser = user._id;
+        verifyCode = user.verifyCode;
+        assert.equal('pho1@gmail.com', user.email);
+    });
+
+    it('Can verify a user', async () => {
+        await request(app).get(`/user/verify/${idUser}/${verifyCode}`);
+        const user = await User.findOne() as User;
+        assert.equal(true, user.isVerified);
+    });
+
+    it('Cannot verify invalid code', async () => {
+        const response = await request(app).get(`/user/verify/${idUser}/${verifyCode + 1}`);
+        const user = await User.findOne() as User;
+        assert.equal(false, user.isVerified);
+        assert.equal(404, response.status);
+    });
+});
