@@ -11,6 +11,7 @@
     "@types/jsonwebtoken": "^7.2.3",
     "@types/mocha": "^2.2.41",
     "@types/mongoose": "^4.7.25",
+    "@types/nodemailer": "^4.3.0",
     "@types/random-string": "^0.0.28",
     "@types/supertest": "^2.0.2",
     "bcrypt": "^1.0.3",
@@ -20,6 +21,7 @@
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.1.0",
     "mongoose": "^4.13.1",
+    "nodemailer": "^4.4.0",
     "random-string": "^0.2.0"
   },
   "devDependencies": {

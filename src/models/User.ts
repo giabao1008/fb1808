@@ -4,6 +4,7 @@ import { hash, compare } from 'bcrypt';
 import { create } from 'domain';
 import { SignUpResponse } from '../types/SignUpResponse';
 import randomString = require('random-string');
+import { sendVerifyEmail } from '../lib/mailing';
 
 const UserSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
@@ -26,6 +27,10 @@ export class User extends UserModel {
         const encrypted = await hash(password, 8);
         const user = new User({ email, password: encrypted, name, verifyCode: randomString() });
         await user.save();
+        if (process.env.isTesting !== 'true') {
+            // Nho dien thong tin vao day
+            // await sendVerifyEmail('1', '2', '4');
+        }
         const token = await createToken({ name, email });
         return {
             token,
