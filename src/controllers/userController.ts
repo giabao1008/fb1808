@@ -1,8 +1,8 @@
 import * as express from 'express';
 import { json } from 'body-parser';
 import { User } from '../models/User';
+import { Response } from '_debugger';
 export const userRoute = express.Router();
-
 
 const jsonParser = json();
 
@@ -38,4 +38,28 @@ userRoute.get('/verify/:idUser/:verifyCode', (req, res) => {
     User.verifyUser(idUser, verifyCode)
     .then(() => res.send({ message: 'verified' }))
     .catch(err => res.status(404).send({ message: err.message }))
+});
+
+const checkTokenMiddleware = async (req, res, next) => {
+    const { token } = req.body;
+    try {
+        await User.checkToken(token);  
+        next(); 
+    } catch(err) {
+        res.status(404).send({ message: 'token is invalid' });
+    }
+}
+
+userRoute.post('/changeinfo', jsonParser, checkTokenMiddleware, (req, res) => {
+    const { name, email } = req.body;
+    User.changeInfo(email, name)
+    .then(user => res.send({ user }))
+    .catch(error => res.status(404).send({ message: error.message }));
+});
+
+userRoute.post('/changepassword', jsonParser, checkTokenMiddleware, (req, res) => {
+    const { password, newPassword, email } = req.body;
+    User.changePassword(email, newPassword, password)
+    .then(user => res.send({ user }))
+    .catch(error => res.status(404).send({ message: error.message }));
 });

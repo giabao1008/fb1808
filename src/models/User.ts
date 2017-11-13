@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { createToken } from '../lib/jwt';
+import { createToken, verifyToken } from '../lib/jwt';
 import { hash, compare } from 'bcrypt';
 import { create } from 'domain';
 import { SignUpResponse } from '../types/SignUpResponse';
@@ -53,5 +53,23 @@ export class User extends UserModel {
         if (!user) throw new Error('User khong ton tai');
         if (verifyCode !== user.verifyCode) throw new Error('CODE sai');
         return User.findByIdAndUpdate(idUser, { isVerified: true });
+    }
+
+    static async changeInfo(email: string, name: string): Promise<User> {
+        return await User.findOneAndUpdate({ email }, { name }) as User;
+    }
+
+    static async changePassword(email, newPassword, password): Promise<User>  {
+        const user = await User.findOne({ email }) as User;
+        if(!user) throw new Error('Email khong ton tai');
+        const same = await compare(password, user.password);
+        if(!same) throw new Error('Sai password');
+        const encrypted = await hash(newPassword, 8);
+        return await User.findOneAndUpdate({ email }, { password: encrypted }) as User;
+    }
+
+    static async checkToken(token) {
+        const obj = await verifyToken(token);
+        return obj;
     }
 }

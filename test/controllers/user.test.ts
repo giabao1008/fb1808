@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import { User } from '../../src/models/User';
 import { app } from '../../src/app';
+import { compareSync } from 'bcrypt';
 
 import * as request from 'supertest';
 
@@ -60,5 +61,31 @@ describe('Test user verify controller', () => {
         const user = await User.findOne() as User;
         assert.equal(false, user.isVerified);
         assert.equal(404, response.status);
+    });
+});
+
+describe.only('User can update info', async () => {
+    let email: string, token: string;
+    
+    beforeEach('Sign up for test', async() => {
+        const body = { email: 'pho@gmail.com', password: '123', name: 'pho' };
+        const response = await request(app).post('/user/signup').send(body);
+        email = response.body.user.email;
+        token = response.body.token;
+    });
+
+    it('Can change info', async () => {
+        const body = { email, token, name: 'Pho 222' };
+        await request(app).post('/user/changeinfo').send(body);
+        const user = await User.findOne() as User;
+        assert.equal('Pho 222', user.name);
+    });
+
+    it('Can change password', async () => {
+        const body = { email, token, newPassword: '321', password: '123' };
+        await request(app).post('/user/changepassword').send(body);
+        const user = await User.findOne() as User;
+        const same = compareSync('321', user.password);
+        assert.equal(true, same);
     });
 });
