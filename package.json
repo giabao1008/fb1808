@@ -11,6 +11,7 @@
     "@types/jsonwebtoken": "^7.2.3",
     "@types/mocha": "^2.2.41",
     "@types/mongoose": "^4.7.25",
+    "@types/random-string": "^0.0.28",
     "@types/supertest": "^2.0.2",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
@@ -18,7 +19,8 @@
     "express": "^4.15.3",
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.1.0",
-    "mongoose": "^4.13.1"
+    "mongoose": "^4.13.1",
+    "random-string": "^0.2.0"
   },
   "devDependencies": {
     "mocha": "^3.4.2",

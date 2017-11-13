@@ -3,11 +3,14 @@ import { createToken } from '../lib/jwt';
 import { hash, compare } from 'bcrypt';
 import { create } from 'domain';
 import { SignUpResponse } from '../types/SignUpResponse';
+import randomString = require('random-string');
 
 const UserSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
     password: { type: String, minlength: 3, required: true, trim: true },
-    name: { type: String, minlength: 3, required: true, trim: true }
+    name: { type: String, minlength: 3, required: true, trim: true },
+    isVerified: { type: Boolean, default: false },
+    verifyCode: { type: String }
 });
 
 const UserModel = model('User', UserSchema);
@@ -16,10 +19,12 @@ export class User extends UserModel {
     email: string;
     password: string;
     name: string;
-
+    verifyCode: string;
+    isVerified: boolean;
+    
     static async signUp(email: string, password: string, name: string): Promise<SignUpResponse> {
         const encrypted = await hash(password, 8);
-        const user = new User({ email, password: encrypted, name });
+        const user = new User({ email, password: encrypted, name, verifyCode: randomString() });
         await user.save();
         const token = await createToken({ name, email });
         return {
@@ -38,3 +43,9 @@ export class User extends UserModel {
         return { token, user: { email, name } };
     }
 }
+
+/*
+    
+Gui email: <a href="/user/verify/${jwt}">HERE</a>
+
+*/
