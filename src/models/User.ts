@@ -11,7 +11,8 @@ const UserSchema = new Schema({
     password: { type: String, minlength: 3, required: true, trim: true },
     name: { type: String, minlength: 3, required: true, trim: true },
     isVerified: { type: Boolean, default: false },
-    verifyCode: { type: String }
+    verifyCode: { type: String },
+    restorePasswordCode: { type: String, default: '' }
 });
 
 const UserModel = model('User', UserSchema);
@@ -22,6 +23,7 @@ export class User extends UserModel {
     name: string;
     verifyCode: string;
     isVerified: boolean;
+    restorePasswordCode: string;
 
     static async signUp(email: string, password: string, name: string): Promise<SignUpResponse> {
         const encrypted = await hash(password, 8);
@@ -72,4 +74,31 @@ export class User extends UserModel {
         const obj = await verifyToken(token);
         return obj;
     }
+
+    static async requestChangePassword(email) {
+        const restorePasswordCode = randomString();
+        if (!process.env.isTesting) {
+            // send restore password email
+            // TODO here
+        }
+        return User.findOneAndUpdate({ email }, { restorePasswordCode });
+    }
+
+    static async checkRestorePassworCode(idUser, code) {
+        const user = await User.findById(idUser) as User;
+        if (!user) throw new Error('User khong ton tai!');
+        if (user.restorePasswordCode !== code) throw new Error('Invalid code');
+        return code;
+    }
+
+    static async changePasswordWhenForget(email, code, newPassword) {
+        const user = await User.findOne(email) as User;
+        if (!user) throw new Error('User khong ton tai!');
+        if (user.restorePasswordCode !== code) throw new Error('Invalid code');
+        const encrypted = await hash(newPassword, 8);
+        return await User.findOneAndUpdate({ email }, { password: encrypted }) as User;
+    }
 }
+
+// sendRequest quen mat khau
+// 

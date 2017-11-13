@@ -63,3 +63,24 @@ userRoute.post('/changepassword', jsonParser, checkTokenMiddleware, (req, res) =
     .then(user => res.send({ user }))
     .catch(error => res.status(404).send({ message: error.message }));
 });
+
+userRoute.post('forgotpassword', jsonParser, (req, res) => {
+    const { email } = req.body;
+    User.requestChangePassword(email)
+    .then(() => res.send({ message: 'Request sent' }))
+    .catch(error => res.status(404).send({ message: error.message }));
+});
+
+userRoute.get('/restorepassword/:idUser/:code', (req, res) => {
+    const { idUser, code } = req.params;
+    User.checkRestorePassworCode(idUser, code)
+    .then(code => res.send({ message: 'Code is valid', code }))
+    .catch(() => res.status(404).send({ message: 'Code is invalid' }))
+});
+
+userRoute.post('/restorepassword', jsonParser, (req, res) => {
+    const { code, newPassword, email } = req.body;
+    User.changePasswordWhenForget(email, code, newPassword)
+    .then(() => res.send({ message: 'Password changed' }))
+    .catch(error => res.status(404).send({ message: error.message }))
+});

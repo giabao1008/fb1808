@@ -64,7 +64,7 @@ describe('Test user verify controller', () => {
     });
 });
 
-describe.only('User can update info', async () => {
+describe('User can update info', async () => {
     let email: string, token: string;
     
     beforeEach('Sign up for test', async() => {
