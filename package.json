@@ -30,7 +30,7 @@
     "tslint-config-airbnb": "^5.2.1"
   },
   "scripts": {
-    "test": "nodemon --exec 'mocha dist/test --recursive -R min'",
+    "test": "nodemon --exec 'mocha dist/test --recursive'",
     "start": "nodemon dist/src/index -e js"
   }
 }

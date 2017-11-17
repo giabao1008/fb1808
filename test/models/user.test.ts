@@ -1,5 +1,7 @@
 import * as assert from 'assert';
 import { User } from '../../src/models/User';
+import { Status } from '../../src/models/Status';
+import { Stats } from 'fs';
 
 describe('Test user model', () => {
     it('Can add new user', async() => {
