@@ -19,3 +19,11 @@ statusRoute.post('/', jsonParser, async (req: Request, res: Response) => {
     await status.save();
     res.send(status);
 });
+
+statusRoute.get('/', async (req: Request, res: Response) => {
+    const { token } = req.headers;
+    const { email } = await verifyToken(token);
+    const user = await User.findOne({ email });
+    const arrayStatus = await Status.find({ author: user._id });
+    res.send(arrayStatus);
+});
