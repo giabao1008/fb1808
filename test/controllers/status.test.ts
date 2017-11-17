@@ -33,4 +33,9 @@ describe.only('Can create new status for user', async () => {
         const res = await request(app).get('/status').set('token', token);
         assert.equal(res.body.length, 1);
     });
+
+    it('Can popolate from user', async () => {
+        const user = await User.findOne().populate('statuses');
+        console.log(user);
+    });
 });
