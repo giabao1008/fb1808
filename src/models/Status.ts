@@ -8,4 +8,4 @@ const statusSchema = new Schema({
 
 const StatusModel = model('Status', statusSchema);
 
-class Status extends StatusModel {}
+export class Status extends StatusModel {}

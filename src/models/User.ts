@@ -12,7 +12,8 @@ const userSchema = new Schema({
     name: { type: String, minlength: 3, required: true, trim: true },
     isVerified: { type: Boolean, default: false },
     verifyCode: { type: String },
-    restorePasswordCode: { type: String, default: '' }
+    restorePasswordCode: { type: String, default: '' },
+    statuses: [{ type: Schema.Types.ObjectId, ref: 'Status' }]
 });
 
 const UserModel = model('User', userSchema);
