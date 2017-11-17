@@ -6,7 +6,7 @@ import { SignUpResponse } from '../types/SignUpResponse';
 import randomString = require('random-string');
 import { sendVerifyEmail } from '../lib/mailing';
 
-const UserSchema = new Schema({
+const userSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
     password: { type: String, minlength: 3, required: true, trim: true },
     name: { type: String, minlength: 3, required: true, trim: true },
@@ -15,7 +15,7 @@ const UserSchema = new Schema({
     restorePasswordCode: { type: String, default: '' }
 });
 
-const UserModel = model('User', UserSchema);
+const UserModel = model('User', userSchema);
 
 export class User extends UserModel {
     email: string;

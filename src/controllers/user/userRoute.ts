@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { json } from 'body-parser';
-import { User } from '../models/User';
+import { User } from '../../models/User';
 import { Response } from '_debugger';
 export const userRoute = express.Router();
 
