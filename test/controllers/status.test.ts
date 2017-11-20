@@ -7,7 +7,7 @@ import * as request from 'supertest';
 
 let token;
 
-describe.only('Can create new status for user', async () => {
+describe.only('Status test', async () => {
     beforeEach('Create a user and get token', async () => {
         const signUpResponse = await User.signUp('pho1@gmail.com', '123', 'abcd');
         token = signUpResponse.token;
@@ -38,8 +38,26 @@ describe.only('Can create new status for user', async () => {
         const res = await request(app).get('/status').set('token', token);
         assert.equal(res.body.length, 1);
     });
+});
 
-    it('Can popolate from user', async () => {
-        const user = await User.findOne().populate('statuses');
+describe.only('Remove status test', () => {
+    let userId, statusId, token;
+    beforeEach('Create a user and 2 status', async () => {
+        const signUpResponse = await User.signUp('pho1@gmail.com', '123', 'abcd');
+        token = signUpResponse.token;
+        await request(app).post('/status')
+        .set('token', token)
+        .send({ content: 'For get test' });
+        await request(app).post('/status')
+        .set('token', token)
+        .send({ content: '2. For get test' });
+        statusId = (await Status.findOne({ content: '2. For get test' }))._id;
+    });
+
+    it('Can remove a status by DELETE', async () => {
+        await request(app).delete('/status/' + statusId).set('token', token);
+        const statuses = await Status.find({}) as Status[];
+        assert.equal(statuses.length, 1);
+        assert.equal(statuses[0].content, 'For get test');
     });
 });
