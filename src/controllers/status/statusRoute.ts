@@ -9,14 +9,19 @@ const jsonParser = bodyParser.json();
 export const statusRoute = express.Router();
 
 statusRoute.post('/', jsonParser, async (req: Request, res: Response) => {
-    const { token, content } = req.body;
-    const { _id } = await verifyToken(token);
-    const status = new Status({
-        content,
-        author: _id
-    });
-    await status.save();
-    res.send(status);
+    const { content } = req.body;
+    const { token } = req.headers;
+    try {
+        const { _id } = await verifyToken(token);
+        const status = new Status({
+            content,
+            author: _id
+        });
+        await status.save();
+        res.send(status);
+    } catch (err) {
+        res.status(404).send({ message: 'Invalid token' });
+    }
 });
 
 statusRoute.get('/', async (req: Request, res: Response) => {
