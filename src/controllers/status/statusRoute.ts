@@ -25,3 +25,11 @@ statusRoute.get('/', userMiddleware, async (req: Request, res: Response) => {
     const arrayStatus = await Status.find({ author: req.body.user._id });
     res.send(arrayStatus);
 });
+
+statusRoute.delete('/:id', userMiddleware, async (req: Request, res: Response) => {
+    const { _id } = req.body.user;
+    const statusId = req.params.id;
+    Status.removeStatus(statusId, _id)
+    .then(status => res.send(status))
+    .catch(error => res.status(404).send(error))
+});
