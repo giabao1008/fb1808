@@ -10,11 +10,10 @@ export const statusRoute = express.Router();
 
 statusRoute.post('/', jsonParser, async (req: Request, res: Response) => {
     const { token, content } = req.body;
-    const { email } = await verifyToken(token);
-    const user = await User.findOne({ email });
+    const { _id } = await verifyToken(token);
     const status = new Status({
         content,
-        author: user._id
+        author: _id
     });
     await status.save();
     res.send(status);
@@ -22,8 +21,7 @@ statusRoute.post('/', jsonParser, async (req: Request, res: Response) => {
 
 statusRoute.get('/', async (req: Request, res: Response) => {
     const { token } = req.headers;
-    const { email } = await verifyToken(token);
-    const user = await User.findOne({ email });
-    const arrayStatus = await Status.find({ author: user._id });
+    const { _id } = await verifyToken(token);
+    const arrayStatus = await Status.find({ author: _id });
     res.send(arrayStatus);
 });

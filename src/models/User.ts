@@ -34,7 +34,7 @@ export class User extends UserModel {
             // Nho dien thong tin vao day
             // await sendVerifyEmail('1', '2', '4');
         }
-        const token = await createToken({ name, email });
+        const token = await createToken({ name, email, _id: user._id });
         return {
             token,
             user: { email, name }
@@ -47,7 +47,7 @@ export class User extends UserModel {
         const same = await compare(password, user.password);
         const { name } = user;
         if(!same) throw new Error('Sai password');
-        const token = await createToken({ name, email });
+        const token = await createToken({ name, email, _id: user._id });
         return { token, user: { email, name } };
     }
 
