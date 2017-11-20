@@ -4,29 +4,24 @@ import * as bodyParser from 'body-parser';
 import { verifyToken } from '../../lib/jwt';
 import { User } from '../../models/User';
 import { Status } from '../../models/Status';
+import { userMiddleware } from './userMiddleware';
 
 const jsonParser = bodyParser.json();
 export const statusRoute = express.Router();
 
-statusRoute.post('/', jsonParser, async (req: Request, res: Response) => {
+statusRoute.post('/', jsonParser, userMiddleware, (req: Request, res: Response) => {
+    const { _id } = req.body.user;
     const { content } = req.body;
-    const { token } = req.headers;
-    try {
-        const { _id } = await verifyToken(token);
-        const status = new Status({
-            content,
-            author: _id
-        });
-        await status.save();
-        res.send(status);
-    } catch (err) {
-        res.status(404).send({ message: 'Invalid token' });
-    }
+    const status = new Status({
+        content,
+        author: _id
+    });
+    status.save()
+    .then(s => res.send(s))
+    .catch(err => res.status(500).send(err));
 });
 
-statusRoute.get('/', async (req: Request, res: Response) => {
-    const { token } = req.headers;
-    const { _id } = await verifyToken(token);
-    const arrayStatus = await Status.find({ author: _id });
+statusRoute.get('/', userMiddleware, async (req: Request, res: Response) => {
+    const arrayStatus = await Status.find({ author: req.body.user._id });
     res.send(arrayStatus);
 });
