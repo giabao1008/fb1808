@@ -19,4 +19,8 @@ export class Status extends StatusModel {
         if(userId.toString() === status.author.toString()) return Status.findByIdAndRemove(statusId);
         throw new Error('Cannot remove other\'s status');
     }
+
+    static likeAStatus(userId, statusId) {
+        return Status.findByIdAndUpdate(statusId, { $push: { likes: userId } })
+    }
 }
