@@ -12,7 +12,7 @@ const StatusModel = model('Status', statusSchema);
 export class Status extends StatusModel {
     content: string;
     author: User;
-
+    likes: {}[];
     static async removeStatus(statusId, userId) {
         const status = await Status.findById(statusId) as Status;
         if (!status) throw new Error('Cannot find status');
