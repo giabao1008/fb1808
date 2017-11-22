@@ -6,7 +6,7 @@ const statusLikeSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
-const StatusLikeModel = model('Status', statusLikeSchema);
+const StatusLikeModel = model('StatusLike', statusLikeSchema);
 
 export class StatusLike extends StatusLikeModel {
     status: Schema.Types.ObjectId;

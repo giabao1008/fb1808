@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { userMiddleware } from '../status/userMiddleware';
 import { StatusLike } from '../../models/StatusLike';
 
-const statusLikeRoute = express.Router();
+export const statusLikeRoute = express.Router();
 
 statusLikeRoute.get('/:idUser/:idStatus', userMiddleware, (req, res) => {
     const { idStatus, idUser } = req.params;
