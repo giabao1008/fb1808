@@ -24,9 +24,8 @@ describe.only('CONTROLLER Can like a status', () => {
     });
 
     it('Can like a status by GET', async () => {
-        await request(app).get(`/statuslike/${userId}/${statusId}`).set('token', token);
+        await request(app).get(`/statuslike/${statusId}`).set('token', token);
         const statuses = await Status.find({}).populate('likes', 'name').populate('author', 'name') as Status[];
-        console.log(statuses[1]);
         assert.equal(statuses[1].likes.length, 1);
         // assert.equal(statusLike.user.toString(), userId);
         // assert.equal(statusLike.status.toString(), statusId);

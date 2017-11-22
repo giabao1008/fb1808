@@ -15,6 +15,7 @@ export class Comment extends CommentModel {
     static async createComment(statusId, userId, content) {
         const comment = new Comment({ status: statusId, user: userId, content });
         await comment.save();
-        return Status.findByIdAndUpdate(statusId, { $push: { comments: comment } });
+        await Status.findByIdAndUpdate(statusId, { $push: { comments: comment } });
+        return comment;
     }
 }
