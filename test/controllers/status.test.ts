@@ -7,7 +7,7 @@ import * as request from 'supertest';
 
 let token;
 
-describe.only('Status test', async () => {
+describe('CONTROLLER Status test', async () => {
     beforeEach('Create a user and get token', async () => {
         const signUpResponse = await User.signUp('pho1@gmail.com', '123', 'abcd');
         token = signUpResponse.token;
@@ -34,13 +34,13 @@ describe.only('Status test', async () => {
         assert.equal(response.status, 404);
     });
 
-    it('Can get all statuses by get', async () => {
+    it('Can get all statuses by GET', async () => {
         const res = await request(app).get('/status').set('token', token);
         assert.equal(res.body.length, 1);
     });
 });
 
-describe.only('Remove status test', () => {
+describe('CONTROLLER Remove status test', () => {
     let userId, statusId, token;
     beforeEach('Create a user and 2 status', async () => {
         const signUpResponse = await User.signUp('pho1@gmail.com', '123', 'abcd');

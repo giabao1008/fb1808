@@ -6,7 +6,7 @@ import { app } from '../../src/app';
 
 let userId, statusId;
 
-describe.only('Can remove status', () => {
+describe('MODEL Can remove status', () => {
     beforeEach('Create a user and 2 status', async () => {
         const signUpResponse = await User.signUp('pho1@gmail.com', '123', 'abcd');
         let token = signUpResponse.token;
