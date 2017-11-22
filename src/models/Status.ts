@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { User } from './User';
+import { Comment } from './Comment';
 
 const statusSchema = new Schema({
     content: { type: String, required: true, trim: true },
@@ -14,6 +15,7 @@ export class Status extends StatusModel {
     content: string;
     author: User;
     likes: {}[];
+    comments: Comment;
     static async removeStatus(statusId, userId) {
         const status = await Status.findById(statusId) as Status;
         if (!status) throw new Error('Cannot find status');

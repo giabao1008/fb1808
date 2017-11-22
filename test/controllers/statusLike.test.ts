@@ -1,12 +1,11 @@
 import * as assert from 'assert';
 import { User } from '../../src/models/User';
-import { StatusLike } from '../../src/models/StatusLike';
 import { Status } from '../../src/models/Status';
 import { app } from '../../src/app';
 
 import * as request from 'supertest';
 
-describe.only('CONTROLLER Can like a status', () => {
+describe('CONTROLLER Can like a status', () => {
     let userId, statusId, token;
 
     beforeEach('Create a user and 2 status', async () => {
