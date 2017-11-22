@@ -8,7 +8,12 @@ const statusLikeSchema = new Schema({
 
 const StatusLikeModel = model('Status', statusLikeSchema);
 
-class StatusLike extends StatusLikeModel {
+export class StatusLike extends StatusLikeModel {
     status: Schema.Types.ObjectId;
     user: Schema.Types.ObjectId;
+
+    static likeAStatus(userId, statusId) {
+        const statusLike = new StatusLike({ status: statusId, user: userId });
+        return statusLike.save();
+    }
 }
