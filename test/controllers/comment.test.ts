@@ -5,7 +5,7 @@ import { app } from '../../src/app';
 
 import * as request from 'supertest';
 
-describe.only('CONTROLLER create new comment', () => {
+describe('CONTROLLER create new comment', () => {
     let userId, statusId, token;
 
     beforeEach('Create a user and 2 status', async () => {
@@ -25,8 +25,7 @@ describe.only('CONTROLLER create new comment', () => {
     it('Can create new comment', async () => {
         const body = { statusId, content: 'Hello Viet Name' };
         await request(app).post('/comment').send(body).set('token', token);
-        const status = await Status.findById(statusId).populate({ path: 'comments', populate: { path: 'user', select: 'name' }}) as any;
-        console.log(status.toObject().comments[0]);
+        const status = await Status.findById(statusId).populate({ path: 'comments', populate: { path: 'user', select: 'name' }}) as Status;
         assert.equal(status.comments[0].content, 'Hello Viet Name');
     });
 });
