@@ -4,7 +4,7 @@ import { app } from '../../src/app';
 import * as request from 'supertest';
 
 
-describe.only('CONTROLLER friend', () => {
+describe('CONTROLLER friend', () => {
     let userId1, userId2, token1, token2;
 
     beforeEach('Create 2 user', async () => {

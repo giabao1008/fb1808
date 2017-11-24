@@ -23,6 +23,14 @@ export class Status extends StatusModel {
         throw new Error('Cannot remove other\'s status');
     }
 
+    static createStatus(idAuthor, content) {
+        const status = new Status({
+            content,
+            author: idAuthor
+        });
+        return status.save();
+    }
+
     static likeAStatus(userId, statusId) {
         return Status.findByIdAndUpdate(statusId, { $push: { likes: userId } })
     }

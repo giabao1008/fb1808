@@ -12,11 +12,7 @@ export const statusRoute = express.Router();
 statusRoute.post('/', jsonParser, userMiddleware, (req: Request, res: Response) => {
     const { _id } = req.body.user;
     const { content } = req.body;
-    const status = new Status({
-        content,
-        author: _id
-    });
-    status.save()
+    Status.createStatus(_id, content)
     .then(s => res.send(s))
     .catch(err => res.status(500).send(err));
 });
