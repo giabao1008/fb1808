@@ -2,7 +2,6 @@ import * as assert from 'assert';
 import { User } from '../../src/models/User';
 import { Status } from '../../src/models/Status';
 import { app } from '../../src/app';
-
 import * as request from 'supertest';
 
 describe('CONTROLLER create new comment', () => {

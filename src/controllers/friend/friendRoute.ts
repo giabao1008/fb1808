@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { User } from '../../models/User';
 import { userMiddleware } from '../status/userMiddleware';
 
-const friendRoute = express.Router();
+export const friendRoute = express.Router();
 
 friendRoute.get('/request/:idReceiver', userMiddleware, (req, res) => {
     User.sendAddFriendRequest(req.body.user._id, req.params.idReceiver)
