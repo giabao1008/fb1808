@@ -13,7 +13,10 @@ const userSchema = new Schema({
     isVerified: { type: Boolean, default: false },
     verifyCode: { type: String },
     restorePasswordCode: { type: String, default: '' },
-    statuses: [{ type: Schema.Types.ObjectId, ref: 'Status' }]
+    statuses: [{ type: Schema.Types.ObjectId, ref: 'Status' }],
+    friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    incomingRequests: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    sentRequested: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const UserModel = model('User', userSchema);
@@ -25,6 +28,9 @@ export class User extends UserModel {
     verifyCode: string;
     isVerified: boolean;
     restorePasswordCode: string;
+    friends: User[];
+    incomingRequests: User[];
+    sentRequested: User[];
 
     static async signUp(email: string, password: string, name: string): Promise<SignUpResponse> {
         const encrypted = await hash(password, 8);
@@ -98,6 +104,22 @@ export class User extends UserModel {
         if (user.restorePasswordCode !== code) throw new Error('Invalid code');
         const encrypted = await hash(newPassword, 8);
         return await User.findOneAndUpdate({ email }, { password: encrypted }) as User;
+    }
+
+    static async sendAddFriendRequest(idSender: string, idReceiver: string) {
+        await User.findByIdAndUpdate(idSender, { $push: { sentRequested: idReceiver } });
+        await User.findByIdAndUpdate(idReceiver, { $push: { incomingRequests: idSender } });
+    }
+
+    static async acceptRequest(idReceiver: string, idSender: string) {
+        await User.findByIdAndUpdate(idSender, {
+            $push: { friends: idReceiver },
+            $pull: { sentRequested: idReceiver }
+        });
+        await User.findByIdAndUpdate(idReceiver, {
+            $push: { friends: idSender },
+            $pull: { incomingRequests: idSender }
+        });
     }
 }
 
