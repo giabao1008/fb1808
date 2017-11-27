@@ -17,6 +17,18 @@ interface SignInInfo {
     password: string;
 }
 
+
+const checkTokenMiddleware = async (req, res, next) => {
+    const { token } = req.body;
+    try {
+        const user = await User.checkToken(token);
+        req.user = user;  
+        next(); 
+    } catch(err) {
+        res.status(404).send({ message: 'token is invalid' });
+    }
+}
+
 // userRoute.get('/', (req, res) => res.send('user signin'));
 // userRoute.post('/signin', (req, res) => res.send('user abcd'));
 userRoute.post('/signup', jsonParser, (req, res) => {
@@ -33,6 +45,10 @@ userRoute.post('/signin', jsonParser, (req, res) => {
     .catch(error => res.status(400).send({ message: error.message }))
 });
 
+userRoute.post('/checktoken', jsonParser, checkTokenMiddleware, (req: any, res) => {
+    res.send({ message: 'OK', user: req.user });
+});
+
 userRoute.get('/verify/:idUser/:verifyCode', (req, res) => {
     const { idUser, verifyCode } = req.params;
     User.verifyUser(idUser, verifyCode)
@@ -40,15 +56,6 @@ userRoute.get('/verify/:idUser/:verifyCode', (req, res) => {
     .catch(err => res.status(404).send({ message: err.message }))
 });
 
-const checkTokenMiddleware = async (req, res, next) => {
-    const { token } = req.body;
-    try {
-        await User.checkToken(token);  
-        next(); 
-    } catch(err) {
-        res.status(404).send({ message: 'token is invalid' });
-    }
-}
 
 userRoute.post('/changeinfo', jsonParser, checkTokenMiddleware, (req, res) => {
     const { name, email } = req.body;
