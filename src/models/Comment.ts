@@ -16,6 +16,6 @@ export class Comment extends CommentModel {
         const comment = new Comment({ status: statusId, user: userId, content });
         await comment.save();
         await Status.findByIdAndUpdate(statusId, { $push: { comments: comment } });
-        return comment;
+        return Comment.findById(comment._id).populate('user', 'name');
     }
 }

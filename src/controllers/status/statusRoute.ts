@@ -18,7 +18,7 @@ statusRoute.post('/', jsonParser, userMiddleware, (req: Request, res: Response) 
 });
 
 statusRoute.get('/', userMiddleware, async (req: Request, res: Response) => {
-    const arrayStatus = await Status.find({ author: req.body.user._id });
+    const arrayStatus = await Status.find({ author: req.body.user._id }).populate({ path: 'comments', populate: { path: 'user', select: 'name' }});
     res.send(arrayStatus);
 });
 
