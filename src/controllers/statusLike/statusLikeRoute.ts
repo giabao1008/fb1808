@@ -8,6 +8,9 @@ export const statusLikeRoute = express.Router();
 statusLikeRoute.get('/:idStatus', userMiddleware, (req, res) => {
     const { idStatus } = req.params;
     Status.likeAStatus(req.body.user._id, idStatus)
-    .then(like => res.send(like))
+    .then(like => {
+        if(like) return res.send({ isSuccess: true });
+        res.send({ isSuccess: false });
+    })
     .catch(err => res.send(err));
 });

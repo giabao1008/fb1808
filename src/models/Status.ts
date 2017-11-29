@@ -31,7 +31,10 @@ export class Status extends StatusModel {
         return status.save();
     }
 
-    static likeAStatus(userId, statusId) {
+    static async likeAStatus(userId, statusId) {
+        const { likes } = await Status.findById(statusId, { likes: 1 }) as Status;
+        const isExisted = likes.some(like => like.toString() === userId);
+        if (isExisted) return;
         return Status.findByIdAndUpdate(statusId, { $push: { likes: userId } })
     }
 }

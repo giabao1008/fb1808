@@ -22,6 +22,14 @@ statusRoute.get('/', userMiddleware, async (req: Request, res: Response) => {
     res.send(arrayStatus);
 });
 
+statusRoute.get('/newfeed', userMiddleware, async (req: Request, res: Response) => {
+    // const arrayStatus = await Status.find({ author: req.body.user._id }).populate({ path: 'comments', populate: { path: 'user', select: 'name' }});
+    const { friends } = await User.findById(req.body.user._id, { friends: 1 }) as User;
+    const myStatus = await Status.find({ author: req.body.user._id }).populate({ path: 'comments', populate: { path: 'user', select: 'name' }}).populate('author', 'name');
+    const friendStatus = await Status.find({ author: { $in: friends } }).populate({ path: 'comments', populate: { path: 'user', select: 'name' }}).populate('author', 'name');
+    res.send(myStatus.concat(friendStatus));
+});
+
 statusRoute.delete('/:id', userMiddleware, async (req: Request, res: Response) => {
     const { _id } = req.body.user;
     const statusId = req.params.id;
