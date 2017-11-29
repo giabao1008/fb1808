@@ -29,8 +29,13 @@ const checkTokenMiddleware = async (req, res, next) => {
     }
 }
 
-// userRoute.get('/', (req, res) => res.send('user signin'));
+userRoute.get('/', (req, res) => {
+    User.find({})
+    .then(friends => res.send(friends))
+    .catch(err => res.send(err));
+});
 // userRoute.post('/signin', (req, res) => res.send('user abcd'));
+
 userRoute.post('/signup', jsonParser, (req, res) => {
     const { email, password, name } = req.body as SignUpInfo;
     User.signUp(email, password, name)
