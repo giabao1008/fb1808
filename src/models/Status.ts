@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { User } from './User';
 import { Comment } from './Comment';
+import { Notification } from './Notification';
 
 const statusSchema = new Schema({
     content: { type: String, required: true, trim: true },
@@ -32,9 +33,14 @@ export class Status extends StatusModel {
     }
 
     static async likeAStatus(userId, statusId) {
-        const { likes } = await Status.findById(statusId, { likes: 1 }) as Status;
+        const { likes, author } = await Status.findById(statusId, { likes: 1, author: 1 }) as Status;
         const isExisted = likes.some(like => like.toString() === userId);
         if (isExisted) return;
+        const { name } = await User.findById(userId) as User;
+        const content = `${name} da binh luan ve status cua ban`;
+        const notification = new Notification({ idStatus: statusId, content, sender: userId, receiver: author });
+        await notification.save();
+        await User.findByIdAndUpdate(author, { $push: { notifications: notification } });
         return Status.findByIdAndUpdate(statusId, { $push: { likes: userId } })
     }
 }

@@ -5,7 +5,7 @@ import { create } from 'domain';
 import { SignUpResponse } from '../types/SignUpResponse';
 import randomString = require('random-string');
 import { sendVerifyEmail } from '../lib/mailing';
-
+import { Notification } from './Notification';
 const userSchema = new Schema({
     email: { type: String, unique: true, required: true, trim: true },
     password: { type: String, minlength: 3, required: true, trim: true },
@@ -16,7 +16,8 @@ const userSchema = new Schema({
     statuses: [{ type: Schema.Types.ObjectId, ref: 'Status' }],
     friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     incomingRequests: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    sentRequested: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    sentRequested: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }]
 });
 
 const UserModel = model('User', userSchema);
@@ -31,7 +32,7 @@ export class User extends UserModel {
     friends: User[];
     incomingRequests: User[];
     sentRequested: User[];
-
+    notifications: Notification[];
     static async signUp(email: string, password: string, name: string): Promise<SignUpResponse> {
         const encrypted = await hash(password, 8);
         const user = new User({ email, password: encrypted, name, verifyCode: randomString() });

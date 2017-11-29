@@ -54,6 +54,7 @@ userRoute.post('/checktoken', jsonParser, checkTokenMiddleware, (req: any, res) 
     res.send({ message: 'OK', user: req.user });
 });
 
+
 userRoute.get('/verify/:idUser/:verifyCode', (req, res) => {
     const { idUser, verifyCode } = req.params;
     User.verifyUser(idUser, verifyCode)

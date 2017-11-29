@@ -37,3 +37,9 @@ statusRoute.delete('/:id', userMiddleware, async (req: Request, res: Response) =
     .then(status => res.send(status))
     .catch(error => res.status(404).send(error))
 });
+
+
+statusRoute.get('/notification', userMiddleware, async (req: any, res) => {
+    const { notifications } = await User.findById(req.body.user._id, { notifications: 1 }).populate('notifications') as User;
+    res.send(notifications);
+});
